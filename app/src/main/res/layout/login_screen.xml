@@ -17,52 +17,59 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/yellow"
+        android:background="@drawable/gui_background_black"
         android:padding="16dp">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/lighter_black"
+            android:textColor="@color/yellow"
             android:textAlignment="center"
             android:padding="8dp"
-            android:textStyle="bold"
+            android:textStyle="bold|italic"
             android:text="LOGIN"
             android:textSize="20dp"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:textColor="@color/lighter_black"
+            android:textColor="@color/yellow"
             android:text="E-Mail"/>
         <EditText
             android:id="@+id/emailLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/lighter_black"
+            android:padding="8sp"
+            android:paddingStart="12sp"
+            android:textSize="14sp"
+            android:background="@drawable/gui_button_text_white"
             android:hint="john.doe@student.umn.ac.id"
             android:inputType="textEmailAddress"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:textColor="@color/lighter_black"
-            android:layout_marginTop="4dp"
+            android:textColor="@color/yellow"
+            android:layout_marginTop="8dp"
             android:text="Password"/>
         <EditText
             android:id="@+id/passwordLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/lighter_black"
+            android:padding="8sp"
+            android:paddingStart="12sp"
+            android:textSize="14sp"
+            android:background="@drawable/gui_button_text_white"
             android:hint="********"
             android:inputType="textPassword"/>
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/loginButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:text="Login"
-            android:backgroundTint="@color/lighter_black"/>
+            android:letterSpacing="0.1"
+            android:background="@drawable/gui_button_text_yellow"
+            android:text="Login"/>
     </LinearLayout>
 
 </LinearLayout>

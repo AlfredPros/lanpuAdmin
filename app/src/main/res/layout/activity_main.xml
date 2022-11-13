@@ -13,37 +13,42 @@
         android:layout_height="125dp"
         android:src="@drawable/admin_lanpu_logo_yellow"
         android:layout_marginBottom="16dp"/>
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/gateInButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Gate In"
-        android:backgroundTint="@color/yellow"
-        android:textColor="@color/lighter_black"/>
-    <Button
+        android:layout_marginTop="8dp"
+        android:letterSpacing="0.1"
+        android:background="@drawable/gui_button_text_yellow"
+        android:text="Gate In" />
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/gateOutButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Gate Out"
-        android:backgroundTint="@color/yellow"
-        android:textColor="@color/lighter_black"/>
-    <Button
+        android:layout_marginTop="8dp"
+        android:letterSpacing="0.1"
+        android:background="@drawable/gui_button_text_yellow"
+        android:text="Gate Out"/>
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/topUpButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Top Up"
-        android:backgroundTint="@color/yellow"
-        android:textColor="@color/lighter_black"/>
-    <Button
+        android:layout_marginTop="8dp"
+        android:letterSpacing="0.1"
+        android:background="@drawable/gui_button_text_yellow"
+        android:text="Top Up"/>
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/logOutButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Logout"
-        android:backgroundTint="@color/white"
-        android:textColor="@color/lighter_black"/>
+        android:layout_marginTop="8dp"
+        android:letterSpacing="0.1"
+        android:background="@drawable/gui_button_text_black"
+        android:textColor="@color/yellow"
+        android:text="Logout"/>
 
 </LinearLayout>
