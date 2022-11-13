@@ -1,18 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical"
+    android:background="@color/lighter_black"
+    android:padding="16dp"
+    android:gravity="center">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/lanpuLogoBlackLoginSignupScreen"
+        android:layout_width="match_parent"
+        android:layout_height="125dp"
+        android:src="@drawable/admin_lanpu_logo_yellow"
+        android:layout_marginBottom="16dp"/>
+    <Button
+        android:id="@+id/gateInButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_gravity="center_horizontal"
+        android:text="Gate In"
+        android:backgroundTint="@color/yellow"
+        android:textColor="@color/lighter_black"/>
+    <Button
+        android:id="@+id/gateOutButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Gate Out"
+        android:backgroundTint="@color/yellow"
+        android:textColor="@color/lighter_black"/>
+    <Button
+        android:id="@+id/topUpButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Top Up"
+        android:backgroundTint="@color/yellow"
+        android:textColor="@color/lighter_black"/>
+    <Button
+        android:id="@+id/logOutButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Logout"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/lighter_black"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
