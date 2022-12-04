@@ -24,7 +24,7 @@ public class TopUpActivity extends AppCompatActivity {
         String id = intent.getStringExtra("id");
 
         outputQr = findViewById(R.id.outputQR);
-        outputQr.setText(id);
+        outputQr.setText("Top Up: " + id);
 
         editAmount = findViewById(R.id.editAmount);
         submit = findViewById(R.id.submitButton);
