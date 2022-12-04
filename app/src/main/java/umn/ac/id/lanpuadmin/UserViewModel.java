@@ -13,15 +13,23 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class UserViewModel extends ViewModel {
     private static final DatabaseReference usersTableReference = FirebaseDatabase.getInstance().getReference("Users");
 
     public void checkInUser(String userID) {
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+        String strDate = sdf.format(c.getTime());
         usersTableReference.child(userID).child("checkedIn").setValue(true);
+        usersTableReference.child(userID).child("entryTime").setValue(strDate);
     }
 
     public void checkOutUser(String userID){
-        usersTableReference.child(userID).child("checkedIn").setValue(false );
+        usersTableReference.child(userID).child("checkedIn").setValue(false);
+        usersTableReference.child(userID).child("entryTime").setValue(null);
     }
 
     public void pay(String userID, int amount) {

@@ -126,8 +126,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 case 2: {  // Gate Out
                     String result = "Gate Out: " + scannedQR;
-                    userViewModel.checkOutUser(scannedQR);
                     ticketViewModel.checkOutTicket(scannedQR);
+                    userViewModel.checkOutUser(scannedQR);
                     outputQr.setText(result);
                     break;
                 }
