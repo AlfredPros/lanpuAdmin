@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -12,7 +13,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 
-public class UserViewModel {
+public class UserViewModel extends ViewModel {
     private static final DatabaseReference usersTableReference = FirebaseDatabase.getInstance().getReference("Users");
 
     public void checkInUser(String userID) {
@@ -20,7 +21,7 @@ public class UserViewModel {
     }
 
     public void checkOutUser(String userID){
-        usersTableReference.child(userID).child("checkedIn").setValue(true);
+        usersTableReference.child(userID).child("checkedIn").setValue(false );
     }
 
     public void pay(String userID, int amount) {
@@ -29,9 +30,9 @@ public class UserViewModel {
             @NonNull
             @Override
             public Transaction.Result doTransaction(@NonNull MutableData currentData) {
-                Integer currentBalance = currentData.getValue(Integer.class);
+                Integer currentBalance = currentData.child("balance").getValue(int.class);
                 if (currentBalance != null) {
-                    currentData.setValue(currentBalance - amount);
+                    currentData.child("balance").setValue(currentBalance - amount);
                 }
                 return Transaction.success(currentData);
             }
@@ -49,17 +50,22 @@ public class UserViewModel {
             @NonNull
             @Override
             public Transaction.Result doTransaction(@NonNull MutableData currentData) {
-                Integer currentBalance = currentData.getValue(Integer.class);
+                Integer currentBalance = currentData.child("balance").getValue(Integer.class);
                 if (currentBalance != null) {
-                    currentData.setValue(currentBalance + amount);
+                    currentData.child("balance").setValue(currentBalance + amount);
                 }
                 return Transaction.success(currentData);
             }
 
             @Override
             public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
-                Log.d("Payment", "Payment Complete");
+                Log.d("Payment", currentData.child("balance").getValue(int.class).toString());
             }
         });
+    }
+
+
+    public DatabaseReference getUserName(String userID) {
+        return usersTableReference.child(userID).child("name");
     }
 }
