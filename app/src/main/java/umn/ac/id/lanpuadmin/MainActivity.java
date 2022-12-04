@@ -16,6 +16,8 @@ import com.google.zxing.integration.android.IntentResult;
 public class MainActivity extends AppCompatActivity {
     private Button logoutButton;
     private Button gateInButton;
+    private Button gateOutButton;
+    private Button topUpButton;
     private TextView outputQr;
 
     @Override
@@ -42,6 +44,31 @@ public class MainActivity extends AppCompatActivity {
                 IntentIntegrator intentIntegrator = new IntentIntegrator(MainActivity.this);
                 intentIntegrator.setPrompt("Scan a barcode or QR Code");
                 intentIntegrator.setOrientationLocked(true);
+                intentIntegrator.setRequestCode(1);
+                intentIntegrator.initiateScan();
+            }
+        });
+
+        gateOutButton = findViewById(R.id.gateOutButton);
+        gateOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                IntentIntegrator intentIntegrator = new IntentIntegrator(MainActivity.this);
+                intentIntegrator.setPrompt("Scan a barcode or QR Code");
+                intentIntegrator.setOrientationLocked(true);
+                intentIntegrator.setRequestCode(2);
+                intentIntegrator.initiateScan();
+            }
+        });
+
+        topUpButton = findViewById(R.id.topUpButton);
+        topUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                IntentIntegrator intentIntegrator = new IntentIntegrator(MainActivity.this);
+                intentIntegrator.setPrompt("Scan a barcode or QR Code");
+                intentIntegrator.setOrientationLocked(true);
+                intentIntegrator.setRequestCode(3);
                 intentIntegrator.initiateScan();
             }
         });
@@ -50,19 +77,34 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        // if the intentResult is null then
-        // toast a message as "cancelled"
-        if (intentResult != null) {
-            if (intentResult.getContents() == null) {
-                Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
-            } else {
-                // if the intentResult is not null we'll set
-                // the content and format of scan message
-                outputQr.setText(intentResult.getContents());
+
+        String scannedQR = null;
+
+        try {
+            scannedQR = data.getStringExtra("SCAN_RESULT");
+        }
+        catch (Exception e) {
+            Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+        }
+
+        if (scannedQR != null) {
+            switch (requestCode) {
+                case 1: {  // Gate In
+                    String result = "Gate In: " + scannedQR;
+                    outputQr.setText(result);
+                    break;
+                }
+                case 2: {  // Gate Out
+                    String result = "Gate Out: " + scannedQR;
+                    outputQr.setText(result);
+                    break;
+                }
+                case 3: {  // Top Up
+                    String result = "Top Up: " + scannedQR;
+                    outputQr.setText(result);
+                    break;
+                }
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 }
