@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "136549659100",
+    "firebase_url": "https://if570-mobileappuas-lanpu-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "if570-mobileappuas-lanpu",
+    "storage_bucket": "if570-mobileappuas-lanpu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:136549659100:android:59e7192d05caf9254fdf19",
+        "android_client_info": {
+          "package_name": "umn.ac.id.lanpu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "136549659100-4rtu82t359qg6n2l3pqs03961iad2lfu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyqtsZt-ikp_q1ADL9T5c_1a5P2OCDxME"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "136549659100-4rtu82t359qg6n2l3pqs03961iad2lfu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:136549659100:android:e8ceb2d22ee9f5a14fdf19",
+        "android_client_info": {
+          "package_name": "umn.ac.id.lanpuadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "136549659100-4rtu82t359qg6n2l3pqs03961iad2lfu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyqtsZt-ikp_q1ADL9T5c_1a5P2OCDxME"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "136549659100-4rtu82t359qg6n2l3pqs03961iad2lfu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
