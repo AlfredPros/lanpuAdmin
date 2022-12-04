@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/lighter_black"
+    android:padding="16dp"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/lanpuLogoBlackLoginSignupScreen"
+        android:layout_width="match_parent"
+        android:layout_height="125dp"
+        android:src="@drawable/admin_lanpu_logo_yellow"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/outputQR"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="[QR Output]"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:letterSpacing="0.1"
+        android:textColor="@color/yellow"/>
+
+    <TextView
+        android:id="@+id/amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Amount"
+        android:layout_marginTop="8dp"
+        android:letterSpacing="0.1"
+        android:textColor="@color/yellow"/>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/editAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/yellow"
+        android:hint="10000"
+        android:text="10000"
+        android:textColorHint="@color/yellow"
+        android:inputType="number"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/submitButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:letterSpacing="0.1"
+        android:background="@drawable/gui_button_text_yellow"
+        android:text="Submit" />
+
+</LinearLayout>

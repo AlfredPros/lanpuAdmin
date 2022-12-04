@@ -102,6 +102,11 @@ public class MainActivity extends AppCompatActivity {
                 case 3: {  // Top Up
                     String result = "Top Up: " + scannedQR;
                     outputQr.setText(result);
+
+                    Intent intentTopUp = new Intent(MainActivity.this, TopUpActivity.class);
+                    intentTopUp.putExtra("id", scannedQR);
+                    startActivity(intentTopUp);
+
                     break;
                 }
             }
