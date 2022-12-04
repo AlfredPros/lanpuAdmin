@@ -51,4 +51,13 @@
         android:textColor="@color/yellow"
         android:text="Logout"/>
 
+    <TextView
+        android:id="@+id/outputQR"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="[QR Output]"
+        android:layout_marginTop="8dp"
+        android:letterSpacing="0.1"
+        android:textColor="@color/yellow"/>
+
 </LinearLayout>
