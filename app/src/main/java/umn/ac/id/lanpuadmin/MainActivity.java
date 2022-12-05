@@ -124,6 +124,8 @@ public class MainActivity extends AppCompatActivity {
                                         ticketViewModel.createTicket(finalScannedQR, name, "Motorcycle");
                                     }
                                 });
+                            } else {
+                                Toast.makeText(MainActivity.this, "User telah Checked in.", Toast.LENGTH_LONG);
                             }
                         }
 
@@ -146,11 +148,14 @@ public class MainActivity extends AppCompatActivity {
                                 userViewModel.checkOutUser(finalScannedQR1);
                                 outputQr.setText(result);
                             }
+                            if (!snapshot.exists()) {
+                                Toast.makeText(MainActivity.this, "User Tidak Checked In", Toast.LENGTH_LONG);
+                            }
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-
+//                            Toast.makeText(MainActivity.this, "User Tidak Checked In", Toast.LENGTH_LONG);
                         }
                     });
                     break;
