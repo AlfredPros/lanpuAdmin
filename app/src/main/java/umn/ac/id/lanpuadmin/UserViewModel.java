@@ -18,6 +18,7 @@ import java.util.Calendar;
 
 public class UserViewModel extends ViewModel {
     private static final DatabaseReference usersTableReference = FirebaseDatabase.getInstance().getReference("Users");
+    private static final DatabaseReference revenueReference = FirebaseDatabase.getInstance().getReference("revenue");
 
     public void checkInUser(String userID) {
         Calendar c = Calendar.getInstance();
@@ -41,6 +42,20 @@ public class UserViewModel extends ViewModel {
                 Integer currentBalance = currentData.child("balance").getValue(int.class);
                 if (currentBalance != null) {
                     currentData.child("balance").setValue(currentBalance - amount);
+                    currentData.child("checkedIn").setValue(false);
+                    revenueReference.runTransaction(new Transaction.Handler() {
+                        @NonNull
+                        @Override
+                        public Transaction.Result doTransaction(@NonNull MutableData revenueData) {
+                            int currRevenue = revenueData.getValue(int.class);
+                            revenueData.setValue(currRevenue + amount);
+                            return Transaction.success(revenueData);
+                        }
+                        @Override
+                        public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+                            Log.d("PAYMENT", "Payment deducted and added to balance.");
+                        }
+                    });
                 }
                 return Transaction.success(currentData);
             }

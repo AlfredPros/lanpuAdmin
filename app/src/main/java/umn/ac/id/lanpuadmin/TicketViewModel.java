@@ -3,7 +3,6 @@ package umn.ac.id.lanpuadmin;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -12,8 +11,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,6 +19,7 @@ import java.util.Calendar;
 public class TicketViewModel extends ViewModel {
     private static final DatabaseReference activeTicketTableReference = FirebaseDatabase.getInstance().getReference("ActiveTickets");
     private static final DatabaseReference ticketsTableReference = FirebaseDatabase.getInstance().getReference("Tickets");
+    private static final DatabaseReference paymentRequestReference = FirebaseDatabase.getInstance().getReference("PaymentRequest");
     private static final UserViewModel userViewModel = new UserViewModel();
 
 
@@ -69,27 +68,32 @@ public class TicketViewModel extends ViewModel {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 String ticketID = task.getResult().getValue(String.class);
-                getTicket(ticketID).runTransaction(new Transaction.Handler() {
-                    @NonNull
+                getTicket(ticketID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
-                    public Transaction.Result doTransaction(@NonNull MutableData currentData) {
-                        Ticket currTicket = currentData.getValue(Ticket.class);
-                        if (currTicket != null) {
-                            Calendar c = Calendar.getInstance();
-                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
-                            String strDate = sdf.format(c.getTime());
-                            currentData.child("exitTime").setValue(strDate);
-                            if (currTicket.category.equals("Motorcycle"))
-                                currentData.child("price").setValue(2000);
-                            if (currTicket.category.equals("Car"))
-                                currentData.child("price").setValue(2000);
-                        }
-                        return Transaction.success(currentData);
-                    }
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        Ticket currTicket = task.getResult().getValue(Ticket.class);
+                        DatabaseReference newPaymentRequestReference = paymentRequestReference.child(userID);
+                        newPaymentRequestReference.child("ticketID").setValue(ticketID);
+                        newPaymentRequestReference.child("ack").setValue(false);
+                        newPaymentRequestReference.child("ack").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                boolean ack = snapshot.getValue(boolean.class);
+                                if (ack) {
+                                    // User membayar jika diberika acknowledgement
+                                    userViewModel.pay(userID, (int) currTicket.price);
+                                    // Active Ticket Dihapus
+                                    activeTicketTableReference.child(userID).removeValue();
+                                    // PaymentRequest Dihapus
+                                    snapshot.getRef().getParent().removeValue();
+                                }
+                            }
 
-                    @Override
-                    public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
-                        userViewModel.pay(userID, currentData.child("price").getValue(int.class));
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
                 });
 
