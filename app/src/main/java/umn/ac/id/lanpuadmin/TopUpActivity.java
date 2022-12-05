@@ -34,6 +34,9 @@ public class TopUpActivity extends AppCompatActivity {
 
         submit.setOnClickListener(view -> {
             String input = editAmount.getText().toString();
+            if (input.equals("")) {
+                input = "10000";
+            }
             outputQr.setText(input);
             userViewModel.topUP(id, Integer.parseInt(editAmount.getText().toString()));
             finish();
