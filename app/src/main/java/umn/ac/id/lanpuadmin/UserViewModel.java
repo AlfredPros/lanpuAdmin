@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,34 +37,12 @@ public class UserViewModel extends ViewModel {
 
     public void pay(String userID, int amount) {
         DatabaseReference userReference = usersTableReference.child(userID);
-        userReference.runTransaction(new Transaction.Handler() {
-            @NonNull
+        userReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
-                Integer currentBalance = currentData.child("balance").getValue(int.class);
-                if (currentBalance != null) {
-                    currentData.child("balance").setValue(currentBalance - amount);
-                    currentData.child("checkedIn").setValue(false);
-                    revenueReference.runTransaction(new Transaction.Handler() {
-                        @NonNull
-                        @Override
-                        public Transaction.Result doTransaction(@NonNull MutableData revenueData) {
-                            int currRevenue = revenueData.getValue(int.class);
-                            revenueData.setValue(currRevenue + amount);
-                            return Transaction.success(revenueData);
-                        }
-                        @Override
-                        public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
-                            Log.d("PAYMENT", "Payment deducted and added to balance.");
-                        }
-                    });
-                }
-                return Transaction.success(currentData);
-            }
-
-            @Override
-            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
-                Log.d("Payment", "Payment Complete");
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                User currUser = task.getResult().getValue(User.class);
+                userReference.child("balance").setValue(currUser.balance - amount);
+                checkOutUser(userID);
             }
         });
     }

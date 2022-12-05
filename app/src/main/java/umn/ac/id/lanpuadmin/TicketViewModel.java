@@ -72,23 +72,37 @@ public class TicketViewModel extends ViewModel {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         Ticket currTicket = task.getResult().getValue(Ticket.class);
+                        if (currTicket != null) {
+                            Calendar c = Calendar.getInstance();
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+                            String strDate = sdf.format(c.getTime());
+                            task.getResult().getRef().child("exitTime").setValue(strDate);
+                            if (currTicket.category.equals("Motorcycle"))
+                                task.getResult().getRef().child("price").setValue(2000);
+                            if (currTicket.category.equals("Car"))
+                                task.getResult().getRef().child("price").setValue(2000);
+                        }
+
                         DatabaseReference newPaymentRequestReference = paymentRequestReference.child(userID);
                         newPaymentRequestReference.child("ticketID").setValue(ticketID);
                         newPaymentRequestReference.child("ack").setValue(false);
-                        newPaymentRequestReference.child("ack").addValueEventListener(new ValueEventListener() {
+                        newPaymentRequestReference.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                boolean ack = snapshot.getValue(boolean.class);
-                                if (ack) {
-                                    // User membayar jika diberika acknowledgement
-                                    userViewModel.pay(userID, (int) currTicket.price);
-                                    // Active Ticket Dihapus
-                                    activeTicketTableReference.child(userID).removeValue();
-                                    // PaymentRequest Dihapus
-                                    snapshot.getRef().getParent().removeValue();
+                                if (snapshot.child("ack").exists()) {
+                                    boolean ack = snapshot.child("ack").getValue(boolean.class);
+                                    if (ack) {
+                                        // User membayar jika diberika acknowledgement
+                                        userViewModel.pay(userID, (int) currTicket.price);
+                                        userViewModel.checkOutUser(userID);
+                                        // Active Ticket Dihapus
+                                        activeTicketTableReference.child(userID).removeValue();
+                                        // PaymentRequest Dihapus
+                                        snapshot.getRef().getParent().removeValue();
+                                        Log.d("PAYMENTREQUEST", "PAYMENTREQUEST REMOVED");
+                                    }
                                 }
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -96,7 +110,6 @@ public class TicketViewModel extends ViewModel {
                         });
                     }
                 });
-
             }
         });
     }
