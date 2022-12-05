@@ -111,14 +111,25 @@ public class MainActivity extends AppCompatActivity {
             switch (requestCode) {
                 case 1: {  // Gate In
                     String result = "Gate In: " + scannedQR;
-                    userViewModel.checkInUser(scannedQR);
-//                    String userID, String name, String category
                     String finalScannedQR = scannedQR;
-                    userViewModel.getUserName(scannedQR).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    ticketViewModel.getActiveTicket(scannedQR).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onComplete(@NonNull Task<DataSnapshot> task) {
-                            String name = task.getResult().getValue(String.class);
-                            ticketViewModel.createTicket(finalScannedQR, name, "Motorcycle");
+                        public void onDataChange(DataSnapshot snapshot) {
+                            if (!snapshot.exists()) {
+                                userViewModel.checkInUser(finalScannedQR);;
+                                Task<DataSnapshot> motorcycle = userViewModel.getUserName(finalScannedQR).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                        String name = task.getResult().getValue(String.class);
+                                        ticketViewModel.createTicket(finalScannedQR, name, "Motorcycle");
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
                         }
                     });
                     outputQr.setText(result);
@@ -126,9 +137,22 @@ public class MainActivity extends AppCompatActivity {
                 }
                 case 2: {  // Gate Out
                     String result = "Gate Out: " + scannedQR;
-                    ticketViewModel.checkOutTicket(scannedQR);
-                    userViewModel.checkOutUser(scannedQR);
-                    outputQr.setText(result);
+                    String finalScannedQR1 = scannedQR;
+                    ticketViewModel.getActiveTicket(scannedQR).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                ticketViewModel.checkOutTicket(finalScannedQR1);
+                                userViewModel.checkOutUser(finalScannedQR1);
+                                outputQr.setText(result);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                     break;
                 }
                 case 3: {  // Top Up
