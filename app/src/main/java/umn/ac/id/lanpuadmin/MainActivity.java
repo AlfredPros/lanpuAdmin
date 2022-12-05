@@ -145,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {
                                 ticketViewModel.checkOutTicket(finalScannedQR1);
-                                userViewModel.checkOutUser(finalScannedQR1);
                                 outputQr.setText(result);
                             }
                             if (!snapshot.exists()) {
