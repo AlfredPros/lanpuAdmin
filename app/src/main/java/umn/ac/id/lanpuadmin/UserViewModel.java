@@ -37,14 +37,15 @@ public class UserViewModel extends ViewModel {
 
     public void pay(String userID, int amount) {
         DatabaseReference userReference = usersTableReference.child(userID);
-        userReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                User currUser = task.getResult().getValue(User.class);
-                userReference.child("balance").setValue(currUser.balance - amount);
-                checkOutUser(userID);
-            }
-        });
+//        userReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                User currUser = task.getResult().getValue(User.class);
+//                userReference.child("balance").setValue(currUser.balance - amount);
+//            }
+//        });
+        this.topUP(userID, -amount);
+        Log.d("PAY", "balance called");
     }
 
     public void topUP(String userID, int amount) {

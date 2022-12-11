@@ -3,6 +3,7 @@ package umn.ac.id.lanpuadmin;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -11,6 +12,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
@@ -77,10 +80,15 @@ public class TicketViewModel extends ViewModel {
                             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
                             String strDate = sdf.format(c.getTime());
                             task.getResult().getRef().child("exitTime").setValue(strDate);
-                            if (currTicket.category.equals("Motorcycle"))
+                            if (currTicket.category.equals("Motorcycle")) {
                                 task.getResult().getRef().child("price").setValue(2000);
-                            if (currTicket.category.equals("Car"))
+                                currTicket.price = 2000;
+                            }
+
+                            if (currTicket.category.equals("Car")) {
                                 task.getResult().getRef().child("price").setValue(2000);
+                                currTicket.price = 6000;
+                            }
                         }
 
                         DatabaseReference newPaymentRequestReference = paymentRequestReference.child(userID);
