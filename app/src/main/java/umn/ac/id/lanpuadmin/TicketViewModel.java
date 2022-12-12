@@ -3,7 +3,6 @@ package umn.ac.id.lanpuadmin;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -12,12 +11,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Objects;
 
 public class TicketViewModel extends ViewModel {
     private static final DatabaseReference activeTicketTableReference = FirebaseDatabase.getInstance().getReference("ActiveTickets");
@@ -36,25 +34,14 @@ public class TicketViewModel extends ViewModel {
 
         DatabaseReference newTicketReference = ticketsTableReference.push();
         String ticketID = newTicketReference.getKey();
-        String entryTime = strDate;
 
 
 //        public Ticket(String ticketID,String userID, String name, String category, long entryTime){
-        Ticket ticket = new Ticket(ticketID, userID, name, category, entryTime);
-        newTicketReference.setValue(ticket).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Log.d("Add", "Added to Ticket List " + ticketID);
-            }
-        });
+        Ticket ticket = new Ticket(ticketID, userID, name, category, strDate);
+        newTicketReference.setValue(ticket).addOnCompleteListener(task -> Log.d("Add", "Added to Ticket List " + ticketID));
 
 //        Masukkan ke active Ticket List
-        activeTicketTableReference.child(userID).setValue(ticketID).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Log.d("Add", "Added to Active Tickets");
-            }
-        });
+        activeTicketTableReference.child(userID).setValue(ticketID).addOnCompleteListener(task -> Log.d("Add", "Added to Active Tickets"));
     }
 
     public DatabaseReference getActiveTicket(String userID) {
@@ -93,26 +80,28 @@ public class TicketViewModel extends ViewModel {
 
                         DatabaseReference newPaymentRequestReference = paymentRequestReference.child(userID);
                         newPaymentRequestReference.child("ticketID").setValue(ticketID);
-                        newPaymentRequestReference.child("ack").setValue(false);
+                        newPaymentRequestReference.child("ack").setValue(null);
                         newPaymentRequestReference.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if (snapshot.child("ack").exists()) {
                                     Log.d("LISTENER", "LISTENERCALLED");
-                                    boolean ack = snapshot.child("ack").getValue(boolean.class);
+                                    boolean ack = Boolean.TRUE.equals(snapshot.child("ack").getValue(boolean.class));
                                     if (ack) {
                                         // User membayar jika diberika acknowledgement
+                                        assert currTicket != null;
                                         userViewModel.pay(userID, (int) currTicket.price);
                                         userViewModel.checkOutUser(userID);
                                         // Active Ticket Dihapus
                                         activeTicketTableReference.child(userID).removeValue();
                                         // PaymentRequest Dihapus
-                                        snapshot.getRef().getParent().removeValue();
-                                        Log.d("PAYMENTREQUEST", "PAYMENTREQUEST REMOVED");
-                                        newPaymentRequestReference.removeEventListener(this);
                                     }
+                                    Objects.requireNonNull(snapshot.getRef().getParent()).removeValue();
+                                    Log.d("PAYMENTREQUEST", "PAYMENTREQUEST REMOVED");
+                                    newPaymentRequestReference.removeEventListener(this);
                                 }
                             }
+
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
 
