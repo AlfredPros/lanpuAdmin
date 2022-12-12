@@ -98,6 +98,7 @@ public class TicketViewModel extends ViewModel {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if (snapshot.child("ack").exists()) {
+                                    Log.d("LISTENER", "LISTENERCALLED");
                                     boolean ack = snapshot.child("ack").getValue(boolean.class);
                                     if (ack) {
                                         // User membayar jika diberika acknowledgement
@@ -108,6 +109,7 @@ public class TicketViewModel extends ViewModel {
                                         // PaymentRequest Dihapus
                                         snapshot.getRef().getParent().removeValue();
                                         Log.d("PAYMENTREQUEST", "PAYMENTREQUEST REMOVED");
+                                        newPaymentRequestReference.removeEventListener(this);
                                     }
                                 }
                             }
