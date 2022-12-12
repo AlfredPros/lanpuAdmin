@@ -51,7 +51,12 @@ public class UserViewModel extends ViewModel {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 Integer balance = task.getResult().getValue(Integer.class);
-                Log.d("PAY", balance.toString());
+                if (balance != null) {
+                    Log.d("PAYBALANCE", balance.toString());
+                } else {
+                    Log.d("PAYBALANCE", "null");
+                }
+
             }
         });
 
@@ -59,11 +64,13 @@ public class UserViewModel extends ViewModel {
             @NonNull
             @Override
             public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                boolean committed = false;
                 Integer currBalance = 0;
-                if (currentData.getValue() != null ) {
+                if (currentData.getValue() != null &&  !committed) {
                     currBalance = currentData.getValue(Integer.class);
+                    currentData.setValue(currBalance - amount);
+                    committed = true;
                 }
-                currentData.setValue(currBalance - amount);
                 return Transaction.success(currentData);
             }
 
