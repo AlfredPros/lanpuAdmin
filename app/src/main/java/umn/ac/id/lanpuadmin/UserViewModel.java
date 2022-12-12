@@ -63,7 +63,6 @@ public class UserViewModel extends ViewModel {
                 if (currentData.getValue() != null ) {
                     currBalance = currentData.getValue(Integer.class);
                 }
-
                 currentData.setValue(currBalance - amount);
                 return Transaction.success(currentData);
             }
