@@ -1,13 +1,12 @@
 package umn.ac.id.lanpuadmin;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModel;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,59 +16,46 @@ import com.google.firebase.database.Transaction;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Objects;
 
 public class UserViewModel extends ViewModel {
     private static final DatabaseReference usersTableReference = FirebaseDatabase.getInstance().getReference("Users");
-    private static final DatabaseReference revenueReference = FirebaseDatabase.getInstance().getReference("revenue");
 
     public void checkInUser(String userID) {
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+        @SuppressLint({"SimpleDateFormat", "WeekBasedYear"}) SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
         String strDate = sdf.format(c.getTime());
         usersTableReference.child(userID).child("checkedIn").setValue(true);
         usersTableReference.child(userID).child("entryTime").setValue(strDate);
     }
 
-    public void checkOutUser(String userID){
+    public void checkOutUser(String userID) {
         usersTableReference.child(userID).child("checkedIn").setValue(false);
         usersTableReference.child(userID).child("entryTime").setValue(null);
     }
 
     public void pay(String userID, int amount) {
         DatabaseReference userReference = usersTableReference.child(userID);
-//        userReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                User currUser = task.getResult().getValue(User.class);
-//                userReference.child("balance").setValue(currUser.balance - amount);
-//            }
-//        });
-//        this.topUP(userID, -amount);
         Log.d("PAY", "balance called");
 
-        userReference.child("balance").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                Integer balance = task.getResult().getValue(Integer.class);
-                if (balance != null) {
-                    Log.d("PAYBALANCE", balance.toString());
-                } else {
-                    Log.d("PAYBALANCE", "null");
-                }
-
+        userReference.child("balance").get().addOnCompleteListener(task -> {
+            Integer balance = task.getResult().getValue(Integer.class);
+            if (balance != null) {
+                Log.d("PAYBALANCE", balance.toString());
+            } else {
+                Log.d("PAYBALANCE", "null");
             }
+
         });
 
         userReference.child("balance").runTransaction(new Transaction.Handler() {
             @NonNull
             @Override
             public Transaction.Result doTransaction(@NonNull MutableData currentData) {
-                boolean committed = false;
-                Integer currBalance = 0;
-                if (currentData.getValue() != null &&  !committed) {
+                Integer currBalance;
+                if (currentData.getValue() != null) {
                     currBalance = currentData.getValue(Integer.class);
                     currentData.setValue(currBalance - amount);
-                    committed = true;
                 }
                 return Transaction.success(currentData);
             }
@@ -99,7 +85,8 @@ public class UserViewModel extends ViewModel {
 
             @Override
             public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
-                Log.d("Payment", currentData.child("balance").getValue(int.class).toString());
+                assert currentData != null;
+                Log.d("Payment", Objects.requireNonNull(currentData.child("balance").getValue(int.class)).toString());
             }
         });
     }
