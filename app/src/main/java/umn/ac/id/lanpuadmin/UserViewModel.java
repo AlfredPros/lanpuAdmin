@@ -44,8 +44,38 @@ public class UserViewModel extends ViewModel {
 //                userReference.child("balance").setValue(currUser.balance - amount);
 //            }
 //        });
-        this.topUP(userID, -amount);
+//        this.topUP(userID, -amount);
         Log.d("PAY", "balance called");
+
+        userReference.child("balance").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                Integer balance = task.getResult().getValue(Integer.class);
+                Log.d("PAY", balance.toString());
+            }
+        });
+
+        userReference.child("balance").runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                Integer currBalance = 0;
+                if (currentData.getValue() != null ) {
+                    currBalance = currentData.getValue(Integer.class);
+                }
+
+                currentData.setValue(currBalance - amount);
+                return Transaction.success(currentData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+                Log.d("PAYSTATUS", String.valueOf(committed));
+                if (error != null) {
+                    Log.d("PAYERROR", error.toString());
+                }
+            }
+        });
     }
 
     public void topUP(String userID, int amount) {

@@ -5,6 +5,8 @@ public class User {
     public long balance;
     public boolean checkedIn;
 
+    public User() {}
+
     public User(String name, String email, int balance){
 //      Create user id based on time';
         this.name = name;
