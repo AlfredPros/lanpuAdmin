@@ -1,7 +1,7 @@
 package umn.ac.id.lanpuadmin;
 
 public class User {
-    public String id, name, email;
+    public String id, name, email, role;
     public long balance;
     public boolean checkedIn;
 
@@ -13,6 +13,7 @@ public class User {
         this.email = email;
         this.balance = balance;
         this.checkedIn = false;
+        this.role = "user";
     }
 
     public User(String id, String name, String email, int balance) {
@@ -21,5 +22,6 @@ public class User {
         this.email = email;
         this.balance = balance;
         this.checkedIn = false;
+        this.role = "user";
     }
 }
